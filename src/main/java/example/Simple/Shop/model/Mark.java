@@ -1,10 +1,7 @@
 package example.Simple.Shop.model;
 
 import example.Simple.Shop.model.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,14 +12,20 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "reviews")
-public class Review {
-
+@Table(name = "marks")
+public class Mark {
     @Id
     @GeneratedValue
     private long id;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private User author;
+    @Column(name = "created")
+    @Temporal(TemporalType.DATE)
     private LocalDate created;
-    private String text;
+    @Column(name = "mark")
+    private Integer value;
 }

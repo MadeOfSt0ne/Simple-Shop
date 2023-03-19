@@ -9,22 +9,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "organizations")
-public class Organization {
-
+@Table(name = "purchases")
+public class Purchase {
     @Id
     @GeneratedValue
     private long id;
-    private String name;
-    private String description;
-    private String logoUrl;
-    private List<Product> products;
-    private User owner;
-    private boolean isBlocked;
+    private Product product;
+    private Organization seller;
+    private User buyer;
+    private BigDecimal price;
+    private LocalDateTime buyTime;
 }
