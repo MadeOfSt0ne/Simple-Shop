@@ -1,5 +1,6 @@
-package example.Simple.Shop.model;
+package example.Simple.Shop.model.mark;
 
+import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

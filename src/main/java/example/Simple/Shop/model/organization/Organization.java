@@ -1,10 +1,8 @@
-package example.Simple.Shop.model;
+package example.Simple.Shop.model.organization;
 
+import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +19,17 @@ public class Organization {
     @Id
     @GeneratedValue
     private long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "logo")
     private String logoUrl;
+    @OneToMany
     private List<Product> products;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User owner;
+    @Column(name = "blocked")
     private boolean isBlocked;
 }

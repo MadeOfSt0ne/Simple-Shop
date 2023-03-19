@@ -1,9 +1,7 @@
-package example.Simple.Shop.model;
+package example.Simple.Shop.model.notification;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import example.Simple.Shop.model.user.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +18,14 @@ public class Notification {
     @Id
     @GeneratedValue
     private long id;
-    private long recipientId;
+    @ManyToOne
+    @JoinColumn(name = "recipient_id")
+    private User recipient;
+    @Column(name = "title")
     private String title;
+    @Column(name = "created")
+    @Temporal(TemporalType.DATE)
     private LocalDate created;
+    @Column(name = "text")
     private String text;
 }

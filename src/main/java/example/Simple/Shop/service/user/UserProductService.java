@@ -1,6 +1,6 @@
 package example.Simple.Shop.service.user;
 
-import example.Simple.Shop.model.Product;
+import example.Simple.Shop.model.product.Product;
 
 public interface UserProductService {
 

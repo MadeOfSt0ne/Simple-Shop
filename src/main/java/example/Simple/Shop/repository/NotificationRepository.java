@@ -1,6 +1,6 @@
 package example.Simple.Shop.repository;
 
-import example.Simple.Shop.model.Notification;
+import example.Simple.Shop.model.notification.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

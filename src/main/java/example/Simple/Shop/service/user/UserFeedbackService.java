@@ -1,6 +1,6 @@
 package example.Simple.Shop.service.user;
 
-public interface FeedbackService {
+public interface UserFeedbackService {
 
     void addReview();
     void addMark();

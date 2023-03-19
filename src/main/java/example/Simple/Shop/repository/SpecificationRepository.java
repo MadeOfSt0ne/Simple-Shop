@@ -1,9 +1,9 @@
 package example.Simple.Shop.repository;
 
-import example.Simple.Shop.model.organization.Organization;
+import example.Simple.Shop.model.specification.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrganizationRepository extends JpaRepository<Organization, Long> {
+public interface SpecificationRepository extends JpaRepository<Specification, Long> {
 }

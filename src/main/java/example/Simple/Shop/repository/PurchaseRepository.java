@@ -1,6 +1,6 @@
 package example.Simple.Shop.repository;
 
-import example.Simple.Shop.model.review.Review;
+import example.Simple.Shop.model.purchase.Purchase;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findByProductId(Long productId, Pageable pageable);
+public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
+    List<Purchase> getPurchasesByBuyerId(Long buyerId, Pageable pageable);
 }
