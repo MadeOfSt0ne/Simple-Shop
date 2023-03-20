@@ -18,4 +18,5 @@ public interface AdminProductService {
     void setDiscount(DiscountDto dto);
     void blockProduct(Long productId);
     void unlockProduct(Long productId);
+    List<Product> getProductsForModeration(int from, int size);
 }

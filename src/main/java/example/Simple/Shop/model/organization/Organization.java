@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class Organization {
     private String description;
     @Column(name = "logo")
     private String logoUrl;
-    @OneToMany
+    @OneToMany(mappedBy = "organization")
+    @ToString.Exclude
     private List<Product> products;
     @ManyToOne
     @JoinColumn(name = "user_id")

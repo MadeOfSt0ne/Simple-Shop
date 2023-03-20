@@ -2,6 +2,6 @@ package example.Simple.Shop.service.user;
 
 public interface PurchaseService {
 
-    void purchaseProduct();
-    void refund();
+    void purchaseProduct(Long buyerId, Long productId, int amount);
+    void refund(Long purchaseId);
 }

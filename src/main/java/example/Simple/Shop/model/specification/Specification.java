@@ -1,9 +1,7 @@
 package example.Simple.Shop.model.specification;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import example.Simple.Shop.model.product.Product;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +15,9 @@ public class Specification {
     @Id
     @Column(name = "name")
     private String name;
-    @Column(name = "value")
+    @Column(name = "description")
     private String value;
-    @Column(name = "product_id")
-    private long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

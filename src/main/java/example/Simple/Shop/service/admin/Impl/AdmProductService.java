@@ -13,6 +13,8 @@ import example.Simple.Shop.repository.OrganizationRepository;
 import example.Simple.Shop.repository.ProductRepository;
 import example.Simple.Shop.service.admin.AdminProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public class AdmProductService implements AdminProductService {
         Product product = productRepo.getReferenceById(productId);
         List<Specification> specs = product.getSpecifications();
         for (Map.Entry<String, String> s : specifications.entrySet()) {
-            specs.add(new Specification(s.getKey(), s.getValue(), productId));
+            specs.add(new Specification(s.getKey(), s.getValue(), product));
         }
         product.setSpecifications(specs);
         return productRepo.save(product);
@@ -106,6 +108,12 @@ public class AdmProductService implements AdminProductService {
         Product product = productRepo.getReferenceById(productId);
         product.setBlocked(false);
         productRepo.save(product);
+    }
+
+    @Override
+    public List<Product> getProductsForModeration(int from, int size) {
+        Pageable pageable = PageRequest.of(from, size);
+        return productRepo.getProductsByBlockedIsTrue(pageable);
     }
 
 }

@@ -8,9 +8,7 @@ import example.Simple.Shop.model.organization.Organization;
 import example.Simple.Shop.model.review.Review;
 import example.Simple.Shop.model.specification.Specification;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 import java.math.BigDecimal;
@@ -22,6 +20,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "products")
 public class Product {
 
@@ -39,26 +38,26 @@ public class Product {
     private long warehouseAmount;
     @Column(name = "blocked")
     private boolean isBlocked;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
+    @ToString.Exclude
     @Formula("SELECT * FROM product_discounts d WHERE d.product_id = id" +
             "LEFT JOIN discounts s ON d.discount_id = s.discount_id")
     private List<Discount> discounts;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @ToString.Exclude
     @Formula("SELECT * FROM reviews r WHERE r.product_id = id")
     private List<Review> reviews;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @ToString.Exclude
     @Formula("SELECT * FROM marks m WHERE m.product_id = id")
     private List<Mark> marks;
     @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @ToString.Exclude
     @Formula("SELECT * FROM product_keywords p WHERE p.product_id = id" +
             "LEFT JOIN keywords k ON p.keyword_id = k.keyword_id")
     private List<Keyword> keywords;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @ToString.Exclude
     @Formula("SELECT * FROM product_specifications p WHERE p.product_id = id")
     private List<Specification> specifications;
 

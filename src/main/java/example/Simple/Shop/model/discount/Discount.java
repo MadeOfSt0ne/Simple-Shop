@@ -22,11 +22,11 @@ public class Discount {
     private long id;
     @Column(name = "title")
     private String title;
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @Formula("SELECT * FROM product_discounts d WHERE d.discount_id = id" +
             "LEFT JOIN products p ON d.product_id = p.product_id")
     private List<Product> products;
-    @Column(name = "value")
+    @Column(name = "size")
     private double value;
     @Column(name = "start_date")
     @Temporal(TemporalType.DATE)

@@ -1,5 +1,6 @@
 package example.Simple.Shop.service.user.Impl;
 
+import example.Simple.Shop.exception.InsufficientAmountException;
 import example.Simple.Shop.model.organization.Organization;
 import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.purchase.Purchase;
@@ -12,7 +13,7 @@ import example.Simple.Shop.service.user.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.naming.InsufficientResourcesException;
+import javax.sound.sampled.Port;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -34,17 +35,29 @@ public class PurchaseServiceImpl implements PurchaseService {
         Organization organization = organizationRepo.getReferenceById(product.getOrganization().getId());
         User seller = userRepo.getReferenceById(organization.getOwner().getId());
 
-        if (buyer.getBalance().compareTo(product.getPrice()) < 0) {
-            throw new InsufficientFundsException("Недостаточно средств для покупки: " + buyer.getBalance());
+        if (buyer.getBalance()
+                .compareTo(product
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(amount))) < 0) {
+            throw new InsufficientAmountException("Недостаточно средств для покупки: " + buyer.getBalance());
         }
         if (product.getWarehouseAmount() >= amount) {
-            throw new InsufficientProductException("Недостаточно товара на складе: " + product.getWarehouseAmount());
+            throw new InsufficientAmountException("Недостаточно товара на складе: " + product.getWarehouseAmount());
         }
 
-        BigDecimal newBuyerBalance = buyer.getBalance().subtract(product.getPrice().multiply(BigDecimal.valueOf(amount)));
-        BigDecimal shopCommission = product.getPrice().multiply(SALES_COMMISSION).multiply(BigDecimal.valueOf(amount));
-        BigDecimal sellersProfit = product.getPrice().multiply(BigDecimal.valueOf(amount)).subtract(shopCommission);
-        BigDecimal newSellerBalance = seller.getBalance().add(sellersProfit);
+        BigDecimal newBuyerBalance = buyer.getBalance()
+                .subtract(product.getPrice().multiply(BigDecimal.valueOf(amount)));
+
+        BigDecimal shopCommission = product.getPrice()
+                .multiply(BigDecimal.valueOf(amount))
+                .multiply(SALES_COMMISSION);
+
+        BigDecimal sellersProfit = product.getPrice()
+                .multiply(BigDecimal.valueOf(amount))
+                .subtract(shopCommission);
+
+        BigDecimal newSellerBalance = seller.getBalance()
+                .add(sellersProfit);
 
         buyer.setBalance(newBuyerBalance);
         userRepo.save(buyer);
@@ -70,11 +83,41 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public void refund(Long buyerId, Long purchaseId) {
+    public void refund(Long purchaseId) {
         Purchase purchase = purchaseRepo.getReferenceById(purchaseId);
         if (LocalDateTime.now().isAfter(purchase.getBuyTime().plusDays(1))) {
             throw new IllegalStateException("Вернуть товар можно только в течение суток с момента покупки");
         }
+        User buyer = userRepo.getReferenceById(purchase.getBuyer().getId());
+        User seller = userRepo.getReferenceById(purchase.getSeller().getOwner().getId());
+        Product product = productRepo.getReferenceById(purchase.getProduct().getId());
 
+        // Для упрощения не будем рассматривать ситуацию, когда продавец уже потратил заработанные средства и не
+        // может сделать возврат средств. Будем считать, что продавец может уйти в "минус" в таком случае.
+        /*if (seller.getBalance()
+                .compareTo(purchase
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(purchase.getAmount()))) < 0) {
+            throw new InsufficientAmountException("Недостаточно средств для возврата: " + seller.getBalance());
+        }*/
+
+        BigDecimal shopCommission = product.getPrice()
+                .multiply(BigDecimal.valueOf(purchase.getAmount()))
+                .multiply(SALES_COMMISSION);
+
+        BigDecimal moneyToRefund = purchase.getPrice()
+                .multiply(BigDecimal.valueOf(purchase.getAmount()))
+                .subtract(shopCommission);
+
+        BigDecimal sellerBalance = seller.getBalance().subtract(moneyToRefund);
+        seller.setBalance(sellerBalance);
+        userRepo.save(seller);
+
+        BigDecimal buyerBalance = buyer.getBalance().add(moneyToRefund);
+        buyer.setBalance(buyerBalance);
+        userRepo.save(buyer);
+
+        product.setWarehouseAmount(product.getWarehouseAmount() + purchase.getAmount());
+        productRepo.save(product);
     }
 }
