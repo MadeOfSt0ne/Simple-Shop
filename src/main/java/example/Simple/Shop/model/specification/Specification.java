@@ -19,4 +19,6 @@ public class Specification {
     private String name;
     @Column(name = "value")
     private String value;
+    @Column(name = "product_id")
+    private long productId;
 }

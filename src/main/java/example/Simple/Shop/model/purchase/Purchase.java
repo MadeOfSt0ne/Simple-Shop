@@ -33,4 +33,6 @@ public class Purchase {
     private BigDecimal price;
     @Column(name = "date_time")
     private LocalDateTime buyTime;
+    @Column(name = "amount")
+    private int amount;
 }

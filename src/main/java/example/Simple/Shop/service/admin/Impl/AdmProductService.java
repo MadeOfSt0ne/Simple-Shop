@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @Service
@@ -42,10 +43,36 @@ public class AdmProductService implements AdminProductService {
     }
 
     @Override
-    public Product addSpecifications(Long productId, List<Specification> specifications) {
+    public void removeKeywords(Long productId, List<Long> keywordsIds) {
         Product product = productRepo.getReferenceById(productId);
-        product.setSpecifications(specifications);
+        List<Keyword> keywords = product.getKeywords();
+        for (Long key : keywordsIds) {
+            keywords.removeIf(kw -> key.equals(kw.getId()));
+        }
+        product.setKeywords(keywords);
+        productRepo.save(product);
+    }
+
+    @Override
+    public Product addSpecifications(Long productId, Map<String, String> specifications) {
+        Product product = productRepo.getReferenceById(productId);
+        List<Specification> specs = product.getSpecifications();
+        for (Map.Entry<String, String> s : specifications.entrySet()) {
+            specs.add(new Specification(s.getKey(), s.getValue(), productId));
+        }
+        product.setSpecifications(specs);
         return productRepo.save(product);
+    }
+
+    @Override
+    public void removeSpecifications(Long productId, List<String> specsToRemove) {
+        Product product = productRepo.getReferenceById(productId);
+        List<Specification> specs = product.getSpecifications();
+        for (String str : specsToRemove) {
+            specs.removeIf(sp -> str.equals(sp.getName()));
+        }
+        product.setSpecifications(specs);
+        productRepo.save(product);
     }
 
     @Override

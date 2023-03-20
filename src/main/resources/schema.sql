@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS purchases
     seller_id BIGINT NOT NULL,
     price DECIMAL NOT NULL,
     date_time TIMESTAMP WITHOUT TIME ZONE,
+    amount INTEGER NOT NULL,
     CONSTRAINT pk_purchase PRIMARY KEY (id),
     CONSTRAINT fk_purchase_on_buyer FOREIGN KEY (buyer_id) REFERENCES users (id),
     CONSTRAINT fk_purchase_on_product FOREIGN KEY (product_id) REFERENCES products (id),
