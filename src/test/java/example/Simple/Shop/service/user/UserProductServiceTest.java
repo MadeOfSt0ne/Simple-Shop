@@ -6,18 +6,19 @@ import example.Simple.Shop.model.product.dto.AddProductDto;
 import example.Simple.Shop.model.user.Role;
 import example.Simple.Shop.model.user.User;
 import example.Simple.Shop.repository.OrganizationRepository;
-import example.Simple.Shop.repository.ProductRepository;
 import example.Simple.Shop.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserProductServiceTest {
 
     private final UserProductService service;
@@ -25,7 +26,7 @@ class UserProductServiceTest {
     private final OrganizationRepository organizationRepo;
 
     @Autowired
-    UserProductServiceTest(UserProductService service, UserRepository userRepo, ProductRepository productRepo, OrganizationRepository organizationRepo) {
+    UserProductServiceTest(UserProductService service, UserRepository userRepo, OrganizationRepository organizationRepo) {
         this.service = service;
         this.userRepo = userRepo;
         this.organizationRepo = organizationRepo;

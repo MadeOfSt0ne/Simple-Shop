@@ -20,7 +20,7 @@ public class UserProductServiceImpl implements UserProductService {
 
     @Override
     public Product addNewProduct(Long userId, AddProductDto dto) {
-        Organization seller = organizationRepo.getReferenceById(dto.getOrganizationId());
+        Organization seller = organizationRepo.getOrganizationById(dto.getOrganizationId());
         if (seller.getOwner().getId() != userId) {
             throw new AccessDeniedException("У вас нет прав для добавления продукта в список товаров данной организации");
         }

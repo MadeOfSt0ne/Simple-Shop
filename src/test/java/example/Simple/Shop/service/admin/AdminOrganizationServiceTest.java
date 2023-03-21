@@ -63,14 +63,14 @@ class AdminOrganizationServiceTest {
     @Test
     void registerOrganization() {
         service.registerOrganization(1L);
-        Organization organization = organizationRepo.getReferenceById(1L);
+        Organization organization = organizationRepo.getOrganizationById(1L);
         assertFalse(organization.isBlocked());
     }
 
     @Test
     void blockOrganization() {
         service.blockOrganization(2L);
-        Organization organization = organizationRepo.getReferenceById(2L);
+        Organization organization = organizationRepo.getOrganizationById(2L);
         assertTrue(organization.isBlocked());
     }
 

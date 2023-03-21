@@ -27,8 +27,8 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 
     @Override
     public Review addReview(ReviewDto dto) {
-        User author = userRepo.getReferenceById(dto.getAuthorId());
-        Product product = productRepo.getReferenceById(dto.getProductId());
+        User author = userRepo.getUserById(dto.getAuthorId());
+        Product product = productRepo.getProductById(dto.getProductId());
         Purchase purchase = purchaseRepo.getPurchaseByProductIdAndBuyerId(dto.getProductId(), dto.getAuthorId());
 
         checkHistory(author, purchase);
@@ -50,8 +50,8 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
         if (dto.getValue() < 0 || dto.getValue() > 10) {
             throw new IllegalStateException("Оценка не может быть меньше 0 и больше 10");
         }
-        User author = userRepo.getReferenceById(dto.getAuthorId());
-        Product product = productRepo.getReferenceById(dto.getProductId());
+        User author = userRepo.getUserById(dto.getAuthorId());
+        Product product = productRepo.getProductById(dto.getProductId());
         Purchase purchase = purchaseRepo.getPurchaseByProductIdAndBuyerId(dto.getProductId(), dto.getAuthorId());
 
         checkHistory(author, purchase);

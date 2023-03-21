@@ -3,6 +3,7 @@ package example.Simple.Shop.controller.admin;
 import example.Simple.Shop.model.discount.dto.DiscountDto;
 import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.product.dto.ProductInfoDto;
+import example.Simple.Shop.model.specification.Specification;
 import example.Simple.Shop.service.admin.AdminProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,17 +35,17 @@ public class AdminProductController {
     }
 
     @PostMapping("/specifications/{id}")
-    public Product addSpecifications(@PathVariable(value = "id") Long productId,
-                               @RequestParam(name = "keywordsIds") Map<String, String> specs) {
+    public List<Specification> addSpecifications(@PathVariable(value = "id") Long productId,
+                                                 @RequestParam(name = "keywordsIds") Map<String, String> specs) {
         log.info("Add specifications {} to product {}", specs, productId);
         return service.addSpecifications(productId, specs);
     }
 
     @DeleteMapping("/specifications/{id}")
     public void deleteSpecifications(@PathVariable(value = "id") Long productId,
-                               @RequestParam(name = "keywordsIds") List<String> specNames) {
-        log.info("Delete specifications {} from product {}", specNames, productId);
-        service.removeSpecifications(productId, specNames);
+                               @RequestParam(name = "specIds") List<Long> specIds) {
+        log.info("Delete specifications {} from product {}", specIds, productId);
+        service.removeSpecifications(productId, specIds);
     }
 
     @PatchMapping

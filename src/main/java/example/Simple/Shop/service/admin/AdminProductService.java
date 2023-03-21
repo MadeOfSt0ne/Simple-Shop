@@ -12,8 +12,8 @@ public interface AdminProductService {
 
     Product addKeywords(Long productId, List<Long> keywordsIds);
     void removeKeywords(Long productId, List<Long> keywordsIds);
-    Product addSpecifications(Long productId, Map<String, String> specifications);
-    void removeSpecifications(Long productId, List<String> specsToRemove);
+    List<Specification> addSpecifications(Long productId, Map<String, String> specifications);
+    void removeSpecifications(Long productId, List<Long> specsToRemove);
     Product updateProductInfo(ProductInfoDto dto);
     void setDiscount(DiscountDto dto);
     void blockProduct(Long productId);

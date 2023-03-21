@@ -14,14 +14,14 @@ public class AdmOrganizationServiceImpl implements AdminOrganizationService {
 
     @Override
     public void registerOrganization(Long organizationId) {
-        Organization org = orgRepo.getReferenceById(organizationId);
+        Organization org = orgRepo.getOrganizationById(organizationId);
         org.setBlocked(false);
         orgRepo.save(org);
     }
 
     @Override
     public void blockOrganization(Long organizationId) {
-        Organization org = orgRepo.getReferenceById(organizationId);
+        Organization org = orgRepo.getOrganizationById(organizationId);
         org.setBlocked(true);
         orgRepo.save(org);
     }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,13 +17,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserNotificationServiceTest {
     private final UserNotificationService service;
     private final UserRepository userRepo;
     private final NotificationRepository notificationRepo;
 
     @Autowired
-    UserNotificationServiceTest(UserNotificationService service, UserRepository userRepo, NotificationRepository notificationRepo) {
+    UserNotificationServiceTest(UserNotificationService service,
+                                UserRepository userRepo,
+                                NotificationRepository notificationRepo) {
         this.service = service;
         this.userRepo = userRepo;
         this.notificationRepo = notificationRepo;

@@ -37,10 +37,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional
     @Override
     public void purchaseProduct(Long buyerId, Long productId, int amount) {
-        User buyer = userRepo.getReferenceById(buyerId);
-        Product product = productRepo.getReferenceById(productId);
-        Organization organization = organizationRepo.getReferenceById(product.getOrganization().getId());
-        User seller = userRepo.getReferenceById(organization.getOwner().getId());
+        User buyer = userRepo.getUserById(buyerId);
+        Product product = productRepo.getProductById(productId);
+        Organization organization = organizationRepo.getOrganizationById(product.getOrganization().getId());
+        User seller = userRepo.getUserById(organization.getOwner().getId());
 
         if (buyer.getBalance()
                 .compareTo(product
@@ -105,13 +105,13 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional
     @Override
     public void refund(Long purchaseId) {
-        Purchase purchase = purchaseRepo.getReferenceById(purchaseId);
+        Purchase purchase = purchaseRepo.getPurchaseById(purchaseId);
         if (LocalDateTime.now().isAfter(purchase.getBuyTime().plusDays(1))) {
             throw new IllegalStateException("Вернуть товар можно только в течение суток с момента покупки");
         }
-        User buyer = userRepo.getReferenceById(purchase.getBuyer().getId());
-        User seller = userRepo.getReferenceById(purchase.getSeller().getOwner().getId());
-        Product product = productRepo.getReferenceById(purchase.getProduct().getId());
+        User buyer = userRepo.getUserById(purchase.getBuyer().getId());
+        User seller = userRepo.getUserById(purchase.getSeller().getOwner().getId());
+        Product product = productRepo.getProductById(purchase.getProduct().getId());
 
         // Для упрощения не будем рассматривать ситуацию, когда продавец уже потратил заработанные средства и не
         // может сделать возврат средств. Будем считать, что продавец может уйти в "минус" в таком случае.

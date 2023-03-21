@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "product_specifications")
 public class Specification {
     @Id
+    @GeneratedValue
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "description")

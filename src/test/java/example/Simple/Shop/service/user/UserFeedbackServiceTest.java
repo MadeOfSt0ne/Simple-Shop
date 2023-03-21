@@ -37,7 +37,11 @@ class UserFeedbackServiceTest {
     private final PurchaseRepository purchaseRepo;
 
     @Autowired
-    UserFeedbackServiceTest(UserFeedbackService service, UserRepository userRepo, ProductRepository productRepo, OrganizationRepository organizationRepo, PurchaseRepository purchaseRepo) {
+    UserFeedbackServiceTest(UserFeedbackService service,
+                            UserRepository userRepo,
+                            ProductRepository productRepo,
+                            OrganizationRepository organizationRepo,
+                            PurchaseRepository purchaseRepo) {
         this.service = service;
         this.userRepo = userRepo;
         this.productRepo = productRepo;

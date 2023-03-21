@@ -75,9 +75,11 @@ class PurchaseServiceTest {
     @Test
     void purchaseProduct() {
         service.purchaseProduct(2L, 1L, 7);
-        assertEquals(19, productRepo.getReferenceById(1L).getWarehouseAmount());
-        assertEquals(BigDecimal.valueOf(60), userRepo.getReferenceById(2L).getBalance());
-        assertEquals(BigDecimal.valueOf(233), userRepo.getReferenceById(1L).getBalance());
+        assertEquals(19, productRepo.getProductById(1L).getWarehouseAmount());
+        assertEquals(BigDecimal.valueOf(60.0).stripTrailingZeros(),
+                userRepo.getUserById(2L).getBalance().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(233.0).stripTrailingZeros(),
+                userRepo.getUserById(1L).getBalance().stripTrailingZeros());
 
         assertEquals(1, purchaseRepo.findAll().size());
     }
@@ -86,9 +88,11 @@ class PurchaseServiceTest {
     void refund() {
         service.purchaseProduct(2L, 1L, 7);
         service.refund(1L);
-        assertEquals(26, productRepo.getReferenceById(1L).getWarehouseAmount());
-        assertEquals(BigDecimal.valueOf(193), userRepo.getReferenceById(2L).getBalance());
-        assertEquals(BigDecimal.valueOf(100), userRepo.getReferenceById(1L).getBalance());
+        assertEquals(26, productRepo.getProductById(1L).getWarehouseAmount());
+        assertEquals(BigDecimal.valueOf(193.0).stripTrailingZeros(),
+                     userRepo.getUserById(2L).getBalance().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(100.0).stripTrailingZeros(),
+                     userRepo.getUserById(1L).getBalance().stripTrailingZeros());
 
         assertEquals(0, purchaseRepo.findAll().size());
     }

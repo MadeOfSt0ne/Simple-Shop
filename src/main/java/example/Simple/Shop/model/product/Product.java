@@ -35,7 +35,7 @@ public class Product {
     private long warehouseAmount;
     @Column(name = "blocked")
     private boolean isBlocked;
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "products")
     @ToString.Exclude
     @Formula("SELECT * FROM product_discounts d WHERE d.product_id = id" +
             "LEFT JOIN FETCH discounts s ON d.discount_id = s.discount_id")
@@ -48,7 +48,7 @@ public class Product {
     @ToString.Exclude
     @Formula("SELECT * FROM marks m WHERE m.product_id = id")
     private List<Mark> marks;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
     @Formula("SELECT * FROM product_keywords p WHERE p.product_id = id" +
             "LEFT JOIN FETCH keywords k ON p.keyword_id = k.keyword_id")

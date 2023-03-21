@@ -9,6 +9,15 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    /**
+     * Idea выделяет как ошибку, но этот запрос работает так, как нужно.
+     * Возвращает список продуктов, ожидающих модерации
+     */
     @Query(nativeQuery = true, value = "SELECT * FROM products p WHERE p.blocked = TRUE ")
     List<Product> getBlockedProducts(Pageable pageable);
+
+    /**
+     * Возвращает продукт по его идентификатору
+     */
+    Product getProductById(Long productId);
 }

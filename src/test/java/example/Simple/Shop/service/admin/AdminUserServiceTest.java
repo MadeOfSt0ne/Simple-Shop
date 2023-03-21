@@ -64,6 +64,7 @@ class AdminUserServiceTest {
     @Test
     void adjustBalance() {
         UserInfo info = service.adjustBalance(BigDecimal.valueOf(22), 1L);
-        assertEquals(BigDecimal.valueOf(55), info.getBalance());
+        assertEquals(BigDecimal.valueOf(55).stripTrailingZeros(),
+                info.getBalance().stripTrailingZeros());
     }
 }

@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  shop:
+    build: ./shop
+    container_name: shop
+    ports:
+      - "8080:8080"
+    depends_on:
+      - shop-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://shop-db/postgres
+      - SPRING_DATASOURCE_USER=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
+  shop-db:
+    image: postgres:14-alpine
+    container_name: shop-db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

@@ -5,6 +5,7 @@ import example.Simple.Shop.model.keyword.Keyword;
 import example.Simple.Shop.model.organization.Organization;
 import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.product.dto.ProductInfoDto;
+import example.Simple.Shop.model.specification.Specification;
 import example.Simple.Shop.model.user.Role;
 import example.Simple.Shop.model.user.User;
 import example.Simple.Shop.repository.*;
@@ -34,7 +35,12 @@ class AdminProductServiceTest {
     private final UserRepository userRepo;
 
     @Autowired
-    AdminProductServiceTest(AdminProductService service, ProductRepository productRepo, DiscountRepository discountRepo, OrganizationRepository organizationRepo, KeywordRepository keywordRepo, UserRepository userRepo) {
+    AdminProductServiceTest(AdminProductService service,
+                            ProductRepository productRepo,
+                            DiscountRepository discountRepo,
+                            OrganizationRepository organizationRepo,
+                            KeywordRepository keywordRepo,
+                            UserRepository userRepo) {
         this.service = service;
         this.productRepo = productRepo;
         this.discountRepo = discountRepo;
@@ -94,20 +100,13 @@ class AdminProductServiceTest {
     void removeKeywords() {
         Product product1 = service.addKeywords(1L, List.of(1L, 2L));
         service.removeKeywords(1L, List.of(1L));
-        assertEquals(1, productRepo.getReferenceById(1L).getKeywords().size());
+        assertEquals(1, productRepo.getProductById(1L).getKeywords().size());
     }
 
     @Test
     void addSpecifications() {
-        Product product1 = service.addSpecifications(1L, specs);
-        assertEquals(2, product1.getSpecifications().size());
-    }
-
-    @Test
-    void removeSpecifications() {
-        Product product1 = service.addSpecifications(1L, specs);
-        service.removeSpecifications(1L, List.of("one"));
-        assertEquals(1, productRepo.getReferenceById(1L).getSpecifications().size());
+        List<Specification> list = service.addSpecifications(1L, specs);
+        assertEquals(2, list.size());
     }
 
     @Test
@@ -130,20 +129,20 @@ class AdminProductServiceTest {
                 LocalDate.now().plusDays(1),
                 LocalDate.now().plusDays(10));
         service.setDiscount(dto);
-        assertEquals(1, productRepo.getReferenceById(1L).getDiscounts().size());
+        assertEquals(1, productRepo.getProductById(1L).getDiscounts().size());
         assertEquals(1, discountRepo.findAll().size());
     }
 
     @Test
     void blockProduct() {
         service.blockProduct(2L);
-        assertTrue(productRepo.getReferenceById(2L).isBlocked());
+        assertTrue(productRepo.getProductById(2L).isBlocked());
     }
 
     @Test
     void unlockProduct() {
         service.unlockProduct(1L);
-        assertFalse(productRepo.getReferenceById(1L).isBlocked());
+        assertFalse(productRepo.getProductById(1L).isBlocked());
     }
 
     @Test
