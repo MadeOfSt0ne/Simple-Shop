@@ -1,6 +1,7 @@
 package example.Simple.Shop.service.user.Impl;
 
 import example.Simple.Shop.exception.InsufficientAmountException;
+import example.Simple.Shop.model.discount.Discount;
 import example.Simple.Shop.model.organization.Organization;
 import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.purchase.Purchase;
@@ -10,14 +11,19 @@ import example.Simple.Shop.repository.ProductRepository;
 import example.Simple.Shop.repository.PurchaseRepository;
 import example.Simple.Shop.repository.UserRepository;
 import example.Simple.Shop.service.user.PurchaseService;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.sound.sampled.Port;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
+@PersistenceContext(type = PersistenceContextType.EXTENDED)
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements PurchaseService {
 
@@ -28,6 +34,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private final static BigDecimal SALES_COMMISSION = new BigDecimal("0.05");
 
+    @Transactional
     @Override
     public void purchaseProduct(Long buyerId, Long productId, int amount) {
         User buyer = userRepo.getReferenceById(buyerId);
@@ -41,18 +48,31 @@ public class PurchaseServiceImpl implements PurchaseService {
                         .multiply(BigDecimal.valueOf(amount))) < 0) {
             throw new InsufficientAmountException("Недостаточно средств для покупки: " + buyer.getBalance());
         }
-        if (product.getWarehouseAmount() >= amount) {
+        if (product.getWarehouseAmount() < amount) {
             throw new InsufficientAmountException("Недостаточно товара на складе: " + product.getWarehouseAmount());
         }
 
-        BigDecimal newBuyerBalance = buyer.getBalance()
-                .subtract(product.getPrice().multiply(BigDecimal.valueOf(amount)));
+        BigDecimal price = product.getPrice();
+        if (product.getDiscounts().size() > 0) {
+            List<Discount> discounts = product.getDiscounts();
+            double discountValue = discounts.stream()
+                   .filter(d -> (d.getStart().isBefore(LocalDate.now()) && d.getEnd().isAfter(LocalDate.now())))
+                   .findFirst()
+                   .map(Discount::getValue)
+                   .orElse(0.0);
 
-        BigDecimal shopCommission = product.getPrice()
+                    double priceModifier = 1 - discountValue;
+                    price = price.multiply(BigDecimal.valueOf(priceModifier));
+        }
+
+        BigDecimal newBuyerBalance = buyer.getBalance()
+                .subtract(price.multiply(BigDecimal.valueOf(amount)));
+
+        BigDecimal shopCommission = price
                 .multiply(BigDecimal.valueOf(amount))
                 .multiply(SALES_COMMISSION);
 
-        BigDecimal sellersProfit = product.getPrice()
+        BigDecimal sellersProfit = price
                 .multiply(BigDecimal.valueOf(amount))
                 .subtract(shopCommission);
 
@@ -82,6 +102,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseRepo.save(purchase);
     }
 
+    @Transactional
     @Override
     public void refund(Long purchaseId) {
         Purchase purchase = purchaseRepo.getReferenceById(purchaseId);
@@ -119,5 +140,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         product.setWarehouseAmount(product.getWarehouseAmount() + purchase.getAmount());
         productRepo.save(product);
+
+        purchaseRepo.deleteById(purchaseId);
     }
 }

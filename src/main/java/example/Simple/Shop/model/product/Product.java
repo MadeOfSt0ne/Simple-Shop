@@ -1,6 +1,5 @@
 package example.Simple.Shop.model.product;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import example.Simple.Shop.model.discount.Discount;
 import example.Simple.Shop.model.keyword.Keyword;
 import example.Simple.Shop.model.mark.Mark;
@@ -12,9 +11,7 @@ import lombok.*;
 import org.hibernate.annotations.Formula;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -41,7 +38,7 @@ public class Product {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
     @ToString.Exclude
     @Formula("SELECT * FROM product_discounts d WHERE d.product_id = id" +
-            "LEFT JOIN discounts s ON d.discount_id = s.discount_id")
+            "LEFT JOIN FETCH discounts s ON d.discount_id = s.discount_id")
     private List<Discount> discounts;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     @ToString.Exclude
@@ -54,7 +51,7 @@ public class Product {
     @OneToMany(fetch = FetchType.LAZY)
     @ToString.Exclude
     @Formula("SELECT * FROM product_keywords p WHERE p.product_id = id" +
-            "LEFT JOIN keywords k ON p.keyword_id = k.keyword_id")
+            "LEFT JOIN FETCH keywords k ON p.keyword_id = k.keyword_id")
     private List<Keyword> keywords;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     @ToString.Exclude

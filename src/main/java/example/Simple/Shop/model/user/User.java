@@ -3,10 +3,8 @@ package example.Simple.Shop.model.user;
 import example.Simple.Shop.model.organization.Organization;
 import example.Simple.Shop.model.purchase.Purchase;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -55,12 +53,16 @@ public class User {
     /**
      * Список организаций, добавленных пользователем
      */
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @Formula("SELECT * FROM organizations o WHERE o.owner_id = id")
+    @ToString.Exclude
     private List<Organization> organizations;
     /**
      * История покупок
      */
-    @OneToMany(mappedBy = "buyer")
+    @OneToMany(mappedBy = "buyer", fetch = FetchType.EAGER)
+    @Formula("SELECT * FROM purchases p WHERE p.buyer_id = id")
+    @ToString.Exclude
     private List<Purchase> purchaseHistory;
     /**
      * Заблокирован пользователь или нет

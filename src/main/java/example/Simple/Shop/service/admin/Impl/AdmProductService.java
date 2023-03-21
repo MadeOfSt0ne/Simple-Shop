@@ -113,7 +113,6 @@ public class AdmProductService implements AdminProductService {
     @Override
     public List<Product> getProductsForModeration(int from, int size) {
         Pageable pageable = PageRequest.of(from, size);
-        return productRepo.getProductsByBlockedIsTrue(pageable);
+        return null;
     }
-
 }

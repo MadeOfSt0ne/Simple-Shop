@@ -1,5 +1,6 @@
 package example.Simple.Shop.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,5 +25,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public String handleAccessDeniedException(final AccessDeniedException e) {
         return e.getMessage();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleDataIntegrityViolationException(final DataIntegrityViolationException e) {
+        return "Объект не найден";
     }
 }

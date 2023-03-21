@@ -10,6 +10,9 @@ import example.Simple.Shop.service.admin.AdminNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис для отправки уведомлений пользователям
+ */
 @Service
 @RequiredArgsConstructor
 public class AdmNotificationServiceImpl implements AdminNotificationService {
@@ -17,6 +20,12 @@ public class AdmNotificationServiceImpl implements AdminNotificationService {
     private final NotificationRepository notificationRepo;
     private final UserRepository userRepo;
 
+    /**
+     * Метод для отправки сообщения пользователю
+     * Старый метод getById(id).orElseThrow() заменили на новый getReferenceById(id). Новый должен кидать
+     * EntityNotFoundException если объекта нет в бд, но не кидает =( Поэтому метод доходит до момента сохранения
+     * уведомления в бд и уже бд кидает свое исключение DataIntegrityViolationException. Замапил его в 404.
+     */
     @Override
     public Notification sendNotification(NotificationDto dto) {
         User recipient = userRepo.getReferenceById(dto.getRecipientId());

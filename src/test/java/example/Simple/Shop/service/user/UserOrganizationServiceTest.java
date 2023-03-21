@@ -1,12 +1,46 @@
 package example.Simple.Shop.service.user;
 
+import example.Simple.Shop.model.organization.Organization;
+import example.Simple.Shop.model.organization.dto.OrganizationDto;
+import example.Simple.Shop.model.user.Role;
+import example.Simple.Shop.model.user.User;
+import example.Simple.Shop.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class UserOrganizationServiceTest {
+
+    private final UserOrganizationService service;
+    private final UserRepository userRepo;
+
+    @Autowired
+    UserOrganizationServiceTest(UserOrganizationService service, UserRepository userRepo) {
+        this.service = service;
+        this.userRepo = userRepo;
+    }
+
+    User user = new User();
+
+    @BeforeEach
+    void setUp() {
+        user.setUsername("author");
+        user.setEmail("sada@addasd.com");
+        user.setPassword("ssss");
+        user.setRole(Role.ADMIN);
+        userRepo.save(user);
+
+    }
 
     @Test
     void createOrganization() {
+        OrganizationDto dto = new OrganizationDto("name", "description", "logoUrl");
+        Organization organization = service.createOrganization(1L, dto);
+        assertEquals("name", organization.getName());
+        assertEquals("logoUrl", organization.getLogoUrl());
     }
 }

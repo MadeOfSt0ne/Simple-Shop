@@ -3,10 +3,8 @@ package example.Simple.Shop.model.organization;
 import example.Simple.Shop.model.product.Product;
 import example.Simple.Shop.model.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import java.util.List;
 
@@ -14,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder(toBuilder = true)
 @Table(name = "organizations")
 public class Organization {
 
@@ -26,8 +25,9 @@ public class Organization {
     private String description;
     @Column(name = "logo")
     private String logoUrl;
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
     @ToString.Exclude
+    @Formula("SELECT * FROM products p WHERE p.organization_id = id")
     private List<Product> products;
     @ManyToOne
     @JoinColumn(name = "user_id")

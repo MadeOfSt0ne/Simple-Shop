@@ -32,7 +32,12 @@ class AdminFeedbackServiceTest {
     private final ProductRepository productRepo;
 
     @Autowired
-    AdminFeedbackServiceTest(AdminFeedbackService service, ReviewRepository reviewRepo, MarkRepository markRepo, UserRepository userRepo, OrganizationRepository organizationRepo, ProductRepository productRepo) {
+    AdminFeedbackServiceTest(AdminFeedbackService service,
+                             ReviewRepository reviewRepo,
+                             MarkRepository markRepo,
+                             UserRepository userRepo,
+                             OrganizationRepository organizationRepo,
+                             ProductRepository productRepo) {
         this.service = service;
         this.reviewRepo = reviewRepo;
         this.markRepo = markRepo;
@@ -68,7 +73,6 @@ class AdminFeedbackServiceTest {
         product.setOrganization(organization);
         productRepo.save(product);
 
-
         review.setAuthor(author1);
         review.setProduct(product);
         review.setCreated(LocalDate.now());
@@ -78,10 +82,6 @@ class AdminFeedbackServiceTest {
         mark.setProduct(product);
         mark.setCreated(LocalDate.now());
         mark.setValue(5);
-
-        System.out.println("***************** user = " + author1);
-        System.out.println("***************** review = " + review);
-        System.out.println("***************** mark = " + mark);
     }
 
     @Test
@@ -93,9 +93,6 @@ class AdminFeedbackServiceTest {
     void findReviewsForProduct() {
         reviewRepo.save(review);
         List<Review> reviews = service.findReviewsForProduct(1L, 0, 10);
-        for (Review r : reviews) {
-            System.out.println("review " + r);
-        }
         assertEquals(1, reviews.size());
         assertEquals("Some review", reviews.get(0).getText());
     }
@@ -104,9 +101,6 @@ class AdminFeedbackServiceTest {
     void findMarksForProduct() {
         markRepo.save(mark);
         List<Mark> marks = service.findMarksForProduct(1L, 0, 10);
-        for (Mark m : marks) {
-            System.out.println("mark " + m);
-        }
         assertEquals(1, marks.size());
         assertEquals(5, marks.get(0).getValue());
     }

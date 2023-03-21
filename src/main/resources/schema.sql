@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS organizations
     description VARCHAR(2000),
     logo VARCHAR(512),
     blocked BOOLEAN,
-    owner_id BIGINT NOT NULL ,
+    owner_id BIGINT NOT NULL,
     CONSTRAINT pk_organization PRIMARY KEY (id),
     CONSTRAINT fk_organization_on_owner FOREIGN KEY (owner_id) REFERENCES users (id)
 );

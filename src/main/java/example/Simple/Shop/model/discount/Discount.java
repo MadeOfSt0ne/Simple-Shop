@@ -24,7 +24,7 @@ public class Discount {
     private String title;
     @ManyToMany(fetch = FetchType.LAZY)
     @Formula("SELECT * FROM product_discounts d WHERE d.discount_id = id" +
-            "LEFT JOIN products p ON d.product_id = p.product_id")
+            "LEFT JOIN FETCH products p ON d.product_id = p.product_id")
     private List<Product> products;
     @Column(name = "size")
     private double value;

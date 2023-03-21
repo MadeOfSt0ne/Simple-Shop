@@ -26,7 +26,7 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
     private final ProductRepository productRepo;
 
     @Override
-    public void addReview(ReviewDto dto) {
+    public Review addReview(ReviewDto dto) {
         User author = userRepo.getReferenceById(dto.getAuthorId());
         Product product = productRepo.getReferenceById(dto.getProductId());
         Purchase purchase = purchaseRepo.getPurchaseByProductIdAndBuyerId(dto.getProductId(), dto.getAuthorId());
@@ -35,6 +35,7 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 
         Review review = ReviewMapper.toReview(dto, author, product);
         reviewRepo.save(review);
+        return review;
     }
 
     private static void checkHistory(User author, Purchase purchase) {
@@ -45,7 +46,10 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
     }
 
     @Override
-    public void addMark(MarkDto dto) {
+    public Mark addMark(MarkDto dto) {
+        if (dto.getValue() < 0 || dto.getValue() > 10) {
+            throw new IllegalStateException("Оценка не может быть меньше 0 и больше 10");
+        }
         User author = userRepo.getReferenceById(dto.getAuthorId());
         Product product = productRepo.getReferenceById(dto.getProductId());
         Purchase purchase = purchaseRepo.getPurchaseByProductIdAndBuyerId(dto.getProductId(), dto.getAuthorId());
@@ -54,5 +58,6 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 
         Mark mark = MarkMapper.toMark(dto, author, product);
         markRepo.save(mark);
+        return mark;
     }
 }
