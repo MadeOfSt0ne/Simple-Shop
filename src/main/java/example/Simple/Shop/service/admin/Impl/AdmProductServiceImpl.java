@@ -28,6 +28,9 @@ public class AdmProductServiceImpl implements AdminProductService {
     private final KeywordRepository keywordRepo;
     private final SpecificationRepository specificationRepo;
 
+    /**
+     * Добавление ключевых слов к продукту
+     */
     @Override
     public Product addKeywords(Long productId, List<Long> keywordsIds) {
         Product product = productRepo.getProductById(productId);
@@ -42,6 +45,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         return productRepo.save(product);
     }
 
+    /**
+     * Удаление ключевых слов из продукта
+     */
     @Override
     public void removeKeywords(Long productId, List<Long> keywordsIds) {
         Product product = productRepo.getProductById(productId);
@@ -53,6 +59,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         productRepo.save(product);
     }
 
+    /**
+     * Добавление характеристик к продукту
+     */
     @Override
     public List<Specification> addSpecifications(Long productId, Map<String, String> specifications) {
         Product product = productRepo.getProductById(productId);
@@ -67,6 +76,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         return specificationRepo.findSpecificationsByProductId(productId);
     }
 
+    /**
+     * Удаление характеристик из продукта
+     */
     @Override
     public void removeSpecifications(Long productId, List<Long> specsToRemove) {
         Product product = productRepo.getProductById(productId);
@@ -75,6 +87,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         }
     }
 
+    /**
+     * Обновление данных о продукте (организация, название, цена, остаток на складе)
+     */
     @Override
     public Product updateProductInfo(ProductInfoDto dto) {
         Product product = productRepo.getProductById(dto.getProductId());
@@ -86,6 +101,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         return productRepo.save(product);
     }
 
+    /**
+     * Добавление скидок к продукту
+     */
     @Override
     public void setDiscount(DiscountDto dto) {
         List<Product> products = dto.getProductsIds().stream()
@@ -94,6 +112,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         discountRepo.save(DiscountMapper.toDiscount(dto, products));
     }
 
+    /**
+     * Блокировка продукта
+     */
     @Override
     public void blockProduct(Long productId) {
         Product product = productRepo.getProductById(productId);
@@ -101,6 +122,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         productRepo.save(product);
     }
 
+    /**
+     * Разблокировка продукта
+     */
     @Override
     public void unlockProduct(Long productId) {
         Product product = productRepo.getProductById(productId);
@@ -108,6 +132,9 @@ public class AdmProductServiceImpl implements AdminProductService {
         productRepo.save(product);
     }
 
+    /**
+     * Просмотр списка продуктов, ожидающих модерацию
+     */
     @Override
     public List<Product> getProductsForModeration(int from, int size) {
         Pageable pageable = PageRequest.of(from, size);

@@ -2,7 +2,7 @@ package example.Simple.Shop.controller.user;
 
 import example.Simple.Shop.model.organization.Organization;
 import example.Simple.Shop.model.organization.dto.OrganizationDto;
-import example.Simple.Shop.service.user.UserOrganizationService;
+import example.Simple.Shop.service.user.CreateOrganizationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserOrganizationController {
 
-    private final UserOrganizationService service;
+    private final CreateOrganizationService service;
 
     @PostMapping
     public Organization createOrganization(@RequestParam Long userId,

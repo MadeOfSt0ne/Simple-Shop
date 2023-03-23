@@ -19,18 +19,27 @@ public class AdmFeedbackServiceImpl implements AdminFeedbackService {
     private final ReviewRepository reviewRepo;
     private final MarkRepository markRepo;
 
+    /**
+     * Просмотр отзывов на продукт (постранично)
+     */
     @Override
     public List<Review> findReviewsForProduct(Long productId, int from, int size) {
         Pageable pageable = PageRequest.of(from, size);
         return reviewRepo.findByProductId(productId, pageable);
     }
 
+    /**
+     * Просмотр оценок продукта (постранично)
+     */
     @Override
     public List<Mark> findMarksForProduct(Long productId, int from, int size) {
         Pageable pageable = PageRequest.of(from, size);
         return markRepo.findByProductId(productId, pageable);
     }
 
+    /**
+     * Удаление отзывов по идентификатору
+     */
     @Override
     public void deleteReviews(List<Long> reviewsIds) {
         for (Long id : reviewsIds) {
@@ -38,6 +47,9 @@ public class AdmFeedbackServiceImpl implements AdminFeedbackService {
         }
     }
 
+    /**
+     * Удаление оценок по идентификатору
+     */
     @Override
     public void deleteMarks(List<Long> marksIds) {
         for (Long id : marksIds) {

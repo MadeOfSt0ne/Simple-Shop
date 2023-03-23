@@ -19,6 +19,9 @@ public class AdmPurchaseHistoryImpl implements AdminPurchaseHistory {
 
     private final PurchaseRepository purchaseRepo;
 
+    /**
+     * Просмотр истории покупок любого пользователя
+     */
     @Override
     public List<PurchaseDto> viewHistory(Long userId, int from, int size) {
         Pageable pageable = PageRequest.of(from, size);

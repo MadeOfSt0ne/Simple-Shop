@@ -25,6 +25,9 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
     private final UserRepository userRepo;
     private final ProductRepository productRepo;
 
+    /**
+     * Добавление отзыва на продукт
+     */
     @Override
     public Review addReview(ReviewDto dto) {
         User author = userRepo.getUserById(dto.getAuthorId());
@@ -38,6 +41,9 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
         return review;
     }
 
+    /**
+     * Метод проверяет, присутствует ли товар в списке покупок
+     */
     private static void checkHistory(User author, Purchase purchase) {
         if (author.getId() != purchase.getBuyer().getId()) {
             throw new AccessDeniedException("Вы не можете оставлять комментарии к данному товару, так как он отсутствует" +
@@ -45,6 +51,9 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
         }
     }
 
+    /**
+     * Добавление оценки продукту
+     */
     @Override
     public Mark addMark(MarkDto dto) {
         if (dto.getValue() < 0 || dto.getValue() > 10) {

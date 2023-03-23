@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * Оценка продукта
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,18 +20,33 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "marks")
 public class Mark {
+    /**
+     * Идентификатор
+     */
     @Id
     @GeneratedValue
     private long id;
+    /**
+     * Продукт
+     */
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    /**
+     * Пользователь-автор
+     */
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+    /**
+     * Дата создания
+     */
     @Column(name = "created")
     @Temporal(TemporalType.DATE)
     private LocalDate created;
+    /**
+     * Значение
+     */
     @Column(name = "mark")
     private Integer value;
 }

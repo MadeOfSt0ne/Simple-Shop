@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class UserOrganizationServiceTest {
+class CreateOrganizationServiceTest {
 
-    private final UserOrganizationService service;
+    private final CreateOrganizationService service;
     private final UserRepository userRepo;
 
     @Autowired
-    UserOrganizationServiceTest(UserOrganizationService service, UserRepository userRepo) {
+    CreateOrganizationServiceTest(CreateOrganizationService service, UserRepository userRepo) {
         this.service = service;
         this.userRepo = userRepo;
     }

@@ -12,6 +12,9 @@ public class AdmOrganizationServiceImpl implements AdminOrganizationService {
 
     private final OrganizationRepository orgRepo;
 
+    /**
+     * Регистрация (разблокировка) организации
+     */
     @Override
     public void registerOrganization(Long organizationId) {
         Organization org = orgRepo.getOrganizationById(organizationId);
@@ -19,6 +22,9 @@ public class AdmOrganizationServiceImpl implements AdminOrganizationService {
         orgRepo.save(org);
     }
 
+    /**
+     * Блокировка организации
+     */
     @Override
     public void blockOrganization(Long organizationId) {
         Organization org = orgRepo.getOrganizationById(organizationId);
@@ -26,6 +32,9 @@ public class AdmOrganizationServiceImpl implements AdminOrganizationService {
         orgRepo.save(org);
     }
 
+    /**
+     * Удаление организации
+     */
     @Override
     public void deleteOrganization(Long organizationId) {
         orgRepo.deleteById(organizationId);

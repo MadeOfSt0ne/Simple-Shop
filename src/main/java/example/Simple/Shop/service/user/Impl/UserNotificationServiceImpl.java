@@ -16,6 +16,9 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     private final NotificationRepository notificationRepo;
 
+    /**
+     * Просмотр уведомлений (постранично)
+     */
     @Override
     public List<Notification> getNotifications(Long recipientId, int from, int size) {
         Pageable pageable = PageRequest.of(from, size);

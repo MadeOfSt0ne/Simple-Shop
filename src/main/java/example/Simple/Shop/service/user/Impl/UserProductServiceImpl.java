@@ -18,6 +18,9 @@ public class UserProductServiceImpl implements UserProductService {
     private final ProductRepository productRepo;
     private final OrganizationRepository organizationRepo;
 
+    /**
+     * Добавление нового продукта
+     */
     @Override
     public Product addNewProduct(Long userId, AddProductDto dto) {
         Organization seller = organizationRepo.getOrganizationById(dto.getOrganizationId());

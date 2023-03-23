@@ -1,5 +1,6 @@
 package example.Simple.Shop.service.user.Impl;
 
+import example.Simple.Shop.exception.AccessDeniedException;
 import example.Simple.Shop.exception.InsufficientAmountException;
 import example.Simple.Shop.model.discount.Discount;
 import example.Simple.Shop.model.organization.Organization;
@@ -8,14 +9,15 @@ import example.Simple.Shop.model.purchase.Purchase;
 import example.Simple.Shop.model.user.User;
 import example.Simple.Shop.repository.OrganizationRepository;
 import example.Simple.Shop.repository.ProductRepository;
-import example.Simple.Shop.repository.PurchaseRepository;
 import example.Simple.Shop.repository.UserRepository;
+import example.Simple.Shop.service.user.PurchaseHistoryService;
 import example.Simple.Shop.service.user.PurchaseService;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,11 +32,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final UserRepository userRepo;
     private final ProductRepository productRepo;
     private final OrganizationRepository organizationRepo;
-    private final PurchaseRepository purchaseRepo;
+    private final PurchaseHistoryService historyService;
 
     private final static BigDecimal SALES_COMMISSION = new BigDecimal("0.05");
 
-    @Transactional
+    /**
+     * Совершение покупки с сохранением покупки в историю
+     */
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public void purchaseProduct(Long buyerId, Long productId, int amount) {
         User buyer = userRepo.getUserById(buyerId);
@@ -51,6 +56,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         if (product.getWarehouseAmount() < amount) {
             throw new InsufficientAmountException("Недостаточно товара на складе: " + product.getWarehouseAmount());
         }
+
+        checkBlocks(buyer, product, organization);
 
         BigDecimal price = product.getPrice();
         if (product.getDiscounts().size() > 0) {
@@ -88,24 +95,33 @@ public class PurchaseServiceImpl implements PurchaseService {
         product.setWarehouseAmount(product.getWarehouseAmount() - amount);
         productRepo.save(product);
 
-        saveToPurchaseHistory(amount, buyer, product, organization);
+        historyService.saveToPurchaseHistory(amount, buyer, product, organization);
     }
 
-    private void saveToPurchaseHistory(int amount, User buyer, Product product, Organization organization) {
-        Purchase purchase = new Purchase();
-        purchase.setProduct(product);
-        purchase.setSeller(organization);
-        purchase.setBuyer(buyer);
-        purchase.setPrice(product.getPrice());
-        purchase.setBuyTime(LocalDateTime.now());
-        purchase.setAmount(amount);
-        purchaseRepo.save(purchase);
+    /**
+     * Проверка блокировок
+     */
+    private void checkBlocks(User buyer, Product product, Organization organization) {
+        if (buyer.isBlocked()) {
+            throw new AccessDeniedException("Пользователь заблокирован и не может совершить покупку");
+        }
+        if (product.isBlocked()) {
+            throw new AccessDeniedException("Продукт заблокирован и не может быть куплен");
+        }
+        if (organization.isBlocked()) {
+            throw new AccessDeniedException("Организация заблокирована и не может совершить продажу");
+        }
     }
 
-    @Transactional
+    /**
+     * Совершение возврата с удалением покупки из истории
+     */
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Override
     public void refund(Long purchaseId) {
-        Purchase purchase = purchaseRepo.getPurchaseById(purchaseId);
+
+        Purchase purchase = historyService.getPurchaseById(purchaseId);
+
         if (LocalDateTime.now().isAfter(purchase.getBuyTime().plusDays(1))) {
             throw new IllegalStateException("Вернуть товар можно только в течение суток с момента покупки");
         }
@@ -131,16 +147,16 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .subtract(shopCommission);
 
         BigDecimal sellerBalance = seller.getBalance().subtract(moneyToRefund);
-        seller.setBalance(sellerBalance);
+            seller.setBalance(sellerBalance);
         userRepo.save(seller);
 
         BigDecimal buyerBalance = buyer.getBalance().add(moneyToRefund);
-        buyer.setBalance(buyerBalance);
+            buyer.setBalance(buyerBalance);
         userRepo.save(buyer);
 
         product.setWarehouseAmount(product.getWarehouseAmount() + purchase.getAmount());
         productRepo.save(product);
 
-        purchaseRepo.deleteById(purchaseId);
+        historyService.deleteById(purchaseId);
     }
 }

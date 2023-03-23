@@ -75,6 +75,7 @@ class PurchaseServiceTest {
     @Test
     void purchaseProduct() {
         service.purchaseProduct(2L, 1L, 7);
+
         assertEquals(19, productRepo.getProductById(1L).getWarehouseAmount());
         assertEquals(BigDecimal.valueOf(60.0).stripTrailingZeros(),
                 userRepo.getUserById(2L).getBalance().stripTrailingZeros());
@@ -88,6 +89,7 @@ class PurchaseServiceTest {
     void refund() {
         service.purchaseProduct(2L, 1L, 7);
         service.refund(1L);
+
         assertEquals(26, productRepo.getProductById(1L).getWarehouseAmount());
         assertEquals(BigDecimal.valueOf(193.0).stripTrailingZeros(),
                      userRepo.getUserById(2L).getBalance().stripTrailingZeros());
