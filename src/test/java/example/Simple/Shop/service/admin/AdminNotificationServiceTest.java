@@ -12,8 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -37,6 +36,11 @@ class AdminNotificationServiceTest {
         recipient.setPassword("pass");
         recipient.setRole(Role.USER);
         userRepo.save(recipient);
+    }
+
+    @Test
+    public void contextLoads() {
+        assertNotNull(userRepo);
     }
 
     @Test

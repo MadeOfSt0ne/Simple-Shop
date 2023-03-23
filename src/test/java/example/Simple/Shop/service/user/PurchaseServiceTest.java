@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class PurchaseServiceTest {
+class PurchaseServiceTest extends PostgresContainer {
 
     private final PurchaseService service;
     private final UserRepository userRepo;

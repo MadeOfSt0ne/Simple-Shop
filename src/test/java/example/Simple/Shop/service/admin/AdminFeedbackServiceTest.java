@@ -7,6 +7,7 @@ import example.Simple.Shop.model.review.Review;
 import example.Simple.Shop.model.user.Role;
 import example.Simple.Shop.model.user.User;
 import example.Simple.Shop.repository.*;
+import example.Simple.Shop.service.user.PostgresContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class AdminFeedbackServiceTest {
+class AdminFeedbackServiceTest extends PostgresContainer {
 
     private final AdminFeedbackService service;
     private final ReviewRepository reviewRepo;

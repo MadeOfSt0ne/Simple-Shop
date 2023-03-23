@@ -10,6 +10,7 @@ import example.Simple.Shop.repository.OrganizationRepository;
 import example.Simple.Shop.repository.ProductRepository;
 import example.Simple.Shop.repository.PurchaseRepository;
 import example.Simple.Shop.repository.UserRepository;
+import example.Simple.Shop.service.user.PostgresContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class AdminPurchaseHistoryTest {
+class AdminPurchaseHistoryTest extends PostgresContainer {
 
     private final AdminPurchaseHistory service;
     private final UserRepository userRepo;

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class UserFeedbackServiceTest {
+class UserFeedbackServiceTest extends PostgresContainer {
 
     private final UserFeedbackService service;
     private final UserRepository userRepo;
